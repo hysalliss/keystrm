@@ -1,0 +1,661 @@
+/* ==============================================
+   FONT
+   나중에 폰트 파일 받으면 여기에 @font-face 등록하고
+   아래 --font-display / --font-body 변수만 교체하면 전체 적용됨
+============================================== */
+
+@font-face {
+  font-family: 'YourDisplayFont';
+  src: url('assets/fonts/TerminaTest-Heavy.otf') format('opentype');
+  font-weight: 900;
+  font-display: swap;
+}
+
+
+:root {
+  --font-display: 'YourDisplayFont'; /* 로고/헤드라인/타이포 포인트용 두꺼운 폰트 자리 */
+  --font-body: 'Pretendard', 'YourDisplayFont', sans-serif;   /* 본문/서브텍스트용 폰트 자리 */
+
+  --color-pink: #B61717;
+  --color-black: #0a0a0a;
+  --color-white: #ffffff;
+  --color-gray-bg: #e8e8e8;   /* 데스크탑에서 카드 바깥 배경 */
+  --color-gray-text: #8a8a8a;
+  --color-gray-line: #cfcfcf; /* 메뉴 항목 사이 구분선 */
+
+  --page-max-width: 480px;    /* 모바일 프레임 폭 */
+  --header-height: 84px;      /* 플로팅 햄버거 영역 높이 (그라데이션 스크림 포함) */
+  --side-padding: clamp(10px, 3vw, 16px); /* 좌우 여백 — .section/.nav__inner/.view__inner 공통 사용, 여기서만 조정하면 전체 반영됨 */
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* 문서 자체는 스크롤 안 함 — 스크롤은 .pages 안의 각 화면(main/.view)이 개별적으로 담당 */
+}
+
+body {
+  background: var(--color-gray-bg);
+  font-family: var(--font-body);
+  color: var(--color-black);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* 실제 콘텐츠는 480px 폭 안에서만, 그 바깥은 데스크탑에서 여백으로 처리 */
+.pages,
+.nav__inner,
+.view__inner {
+  max-width: var(--page-max-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ==============================================
+   HEADER — 햄버거만 떠있는 플로팅 레이어, 배경 없음(투명)
+============================================== */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 120; /* 항상 최상단 — 다른 화면(.view)이 열려 있어도 햄버거로 계속 이동 가능 */
+  height: var(--header-height);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 22px 0 0;
+  pointer-events: none;
+}
+
+/* 햄버거 -> X 모핑 버튼 */
+.hamburger {
+  pointer-events: auto;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger__icon {
+  position: relative;
+  width: 24px;
+  height: 18px;
+}
+
+.hamburger__icon span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--color-pink);
+  border-radius: 1px;
+  transition: transform 0.25s ease, opacity 0.2s ease, top 0.25s ease;
+}
+
+.hamburger__icon span:nth-child(1) { top: 0; }
+.hamburger__icon span:nth-child(2) { top: 8px; }
+.hamburger__icon span:nth-child(3) { top: 16px; }
+
+.hamburger[aria-expanded="true"] .hamburger__icon span:nth-child(1) {
+  top: 8px;
+  transform: rotate(45deg);
+}
+.hamburger[aria-expanded="true"] .hamburger__icon span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger[aria-expanded="true"] .hamburger__icon span:nth-child(3) {
+  top: 8px;
+  transform: rotate(-45deg);
+}
+
+/* ==============================================
+   NAV — 위에서 자연스럽게 펼쳐짐, 흰색 불투명 배경 (그라데이션 없음)
+============================================== */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 110; /* .view(90)보다 위 — 다른 화면이 열려 있어도 메뉴는 그 위로 뜸 */
+
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.4s ease;
+
+  background: var(--color-white);
+}
+
+.nav.is-open {
+  max-height: 560px; /* 아이템 5개 + 헤더 여백 다 펼쳐지기에 충분한 값 */
+}
+
+.nav__inner {
+  padding: calc(var(--header-height) + 12px) var(--side-padding) 56px;
+}
+
+.nav__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav__item {
+  border-bottom: 1px solid var(--color-gray-line);
+}
+
+.nav__item:last-child {
+  border-bottom: none;
+}
+
+.nav__item a {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(28px, 8.5vw, 34px);   /* (1)MAIN 등 메뉴 텍스트 — 포스터 톤의 큰 타이포 */
+  line-height: 35px;
+  letter-spacing: 0.5px;
+  color: var(--color-black);
+}
+
+.nav__num {
+  color: var(--color-black);
+}
+
+/* 현재 페이지 표시: 텍스트는 그대로 검은색, 글씨 폭만큼만 빨간 취소선 */
+.nav__label {
+  position: relative;
+  display: inline-block;
+}
+
+.nav__label::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 4.5px; /* 기존 3px의 1.5배 */
+  background: var(--color-pink);
+  transform: translateY(-50%) scaleX(0); /* 평소엔 폭 0으로 숨김 */
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+
+.nav__item.is-current .nav__label::after {
+  transform: translateY(-50%) scaleX(1); /* 선택되면 왼쪽에서 오른쪽으로 그어지는 모션 */
+}
+
+.nav__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 100;
+}
+
+.nav__backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ==============================================
+   이미지 가이드 뷰어 — data-guide-image 링크 클릭하면 뜨는 풀페이지.
+   가이드 이미지가 세로로 길 수 있어서 모달(라이트박스) 대신
+   QUICKLINK/GUIDE 같은 다른 화면들과 동일하게 위→아래로 쭉 스크롤되는 페이지 형태로 처리.
+   (헤더보다는 아래, 내비 메뉴보다는 위 — 열려있어도 햄버거로 메뉴는 열 수 있게)
+============================================== */
+.image-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 115;
+  background: var(--color-white);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  transform: translateX(100%);
+  transition: transform 0.4s ease;
+}
+
+.image-viewer.is-open {
+  transform: translateX(0);
+}
+
+.image-viewer__inner {
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: calc(var(--header-height) + 16px) var(--side-padding) 96px;
+}
+
+.image-viewer__img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.image-viewer__close {
+  display: block;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 20px;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--color-pink);
+}
+
+/* ==============================================
+   PAGES — MAIN/QUICKLINK/GUIDE/ONECLICK/TIMETABLE 5개가 가로로 나란히 있는 필름스트립.
+   .pages(바깥) = 화면 크기로 고정된 채 안 움직이는 창, overflow:hidden으로 잘라내기만 함.
+   .pages__track(안쪽) = 실제 5칸을 담은 트랙, nav에서 항목을 고르면 여기에만 translateX를 줘서
+   통째로 옆으로 밀림 — 떠나는 화면과 들어오는 화면이 같이 움직여서 "페이지가 넘어가는" 느낌.
+   (자르는 창과 움직이는 트랙이 같은 요소면 창 자체가 같이 밀려버려서 안 됨 — 반드시 분리)
+============================================== */
+.pages {
+  height: 100vh;
+  overflow: hidden;
+  background: var(--color-white);
+}
+
+.pages__track {
+  display: flex;
+  width: 500%; /* 페이지 5개 * 100% */
+  height: 100%;
+  transition: transform 0.5s ease;
+}
+
+/* main과 .view 둘 다 필름스트립의 한 칸 — 트랙의 500% 중 1/5(20%) = .pages 폭의 100%, 안에서만 개별적으로 세로 스크롤 */
+.pages__track > main,
+.pages__track > .view {
+  flex: 0 0 20%;
+  width: 20%;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ==============================================
+   SECTION 공통 — 넉넉한 여백, 경계선 없이 공백으로만 구분
+============================================== */
+.section {
+  padding: 0 var(--side-padding) 96px;
+}
+
+.section--main {
+  position: relative; /* 안의 절대배치 일러스트(.illust--keys) 기준점 */
+}
+
+.section__title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(30px, 9vw, 38px);
+  color: var(--color-black);
+  margin: 0;
+  text-align: center;
+}
+
+.section__num {
+  color: var(--color-pink);
+  margin-right: 8px;
+}
+
+/* ==============================================
+   VIEW — QUICKLINK / GUIDE / ONECLICK / TIMETABLE 화면 안쪽 콘텐츠
+   (바깥 레이아웃/전환은 위 .pages가 담당, 여긴 안쪽 여백만)
+============================================== */
+.view__inner {
+  padding: calc(var(--header-height) + 16px) calc(var(--side-padding) * 2) 96px;
+}
+
+.view__title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(30px, 9vw, 38px);
+  color: var(--color-black);
+  margin: 0 0 40px;
+}
+
+/* 링크 소그룹 제목 (GUIDE/ONECLICK처럼 카테고리가 여러 개일 때) */
+.linkgroup-section {
+  margin-bottom: 48px;
+}
+
+.linkgroup-section:last-child {
+  margin-bottom: 0;
+}
+
+/* 큰 헤드라인(.view__title)과 톤 차이를 줘서 위계를 만드는 작은 라벨 스타일 —
+   본문 리스트 위에 붙는 카테고리 이름표 느낌 (전문적인 리스트 UI에서 흔한 패턴) */
+.linkgroup-section__title {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-gray-text);
+  margin: 0 0 16px;
+}
+
+/* 링크 리스트 — 박스/버튼 없이 텍스트 리스트, 앞에 포인트 색 점 하나만 */
+.linklist {
+  list-style: none;
+  margin: 0 0 40px;
+  padding: 0;
+}
+
+.linklist:last-child {
+  margin-bottom: 0;
+}
+
+.linkgroup-section .linklist {
+  margin-bottom: 0; /* 소그룹 안에서는 .linkgroup-section 자체 여백으로 처리 */
+}
+
+.linklist__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--color-gray-line);
+  font-family: var(--font-body);
+  font-weight: 500; /* 헤드라인급 굵기(900)와 확실히 구분되는 본문 굵기 */
+  font-size: 16px;
+  color: var(--color-black);
+}
+
+.linklist li:last-child .linklist__item {
+  border-bottom: none;
+}
+
+.linklist__item:active {
+  color: var(--color-pink);
+}
+
+/* 눌렀을 때 오른쪽에서 화살표가 슬라이드해 들어오는 반응 */
+.linklist__item::after {
+  content: '→';
+  margin-left: auto;
+  color: var(--color-pink);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.linklist__item:active::after {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* 아이콘 자리 — 실제 플랫폼 로고 파일 받으면 여기 <img> 넣을 자리, 지금은 포인트 점으로 대체 */
+.linklist__item::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-pink);
+}
+
+/* ==============================================
+   MAIN 섹션 구성요소
+============================================== */
+
+/* 로고: 포스터 본문 최상단, 헤더에 고정하지 않고 콘텐츠로 흐름 */
+.logo {
+  position: relative; /* 뒤에 깔리는 .illust--keys보다 위에 그려지도록 */
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  line-height: 0.95;
+  padding-top: calc(var(--header-height) + 18px); /* 플로팅 헤더(햄버거) 영역과 안 겹치게 */
+  margin-bottom: 28px;
+  margin-left: 20px; /* 오른쪽으로 밀기 — 이 숫자만 키우면 더 오른쪽으로 */
+}
+
+.logo__main {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 48px;   /* KEY */
+  color: var(--color-pink);
+  letter-spacing: -0.05em; /* 자간 -5% */
+}
+
+.logo__sub {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 24px;    /* STREAMING / TEAM */
+  color: var(--color-pink);
+  letter-spacing: -0.05em; /* 자간 -5% */
+  line-height: 1;
+  margin-top: 8px;
+}
+
+/* 일러스트 자리 (열쇠 뭉치 / 얼굴 스케치) */
+.illust {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 우측 상단 프레임 일러스트 — 배경처럼 로고 뒤로 깔림, 문서 흐름에서 빠져서
+   다른 컴포넌트(배너/CTA 등) 위치에는 영향 없음. 위치는 top/right 값으로 조정 */
+.illust--keys {
+  position: absolute;
+  top: -20px;
+  right: 0px;
+  width: 60%;
+  z-index: 0;
+}
+
+.illust--face {
+  width: 58%;
+  margin-top: 56px;
+}
+
+.illust__img {
+  width: 100%;
+  height: auto;
+}
+
+/* 배너 (검정 박스 placeholder, PNG로 교체될 자리) */
+.banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: var(--color-black);
+  color: var(--color-white);
+  overflow: hidden;
+  margin-bottom: 32px;
+  transition: transform 0.15s ease;
+}
+
+/* 캐러셀 히어로 카드는 스크롤 중 자체 스케일 효과(아래 JS)가 있어서 눌림 효과는 서브 배너에만 */
+.banner--sub:active {
+  transform: scale(0.97); /* 눌렀을 때 살짝 눌리는 촉각 피드백 */
+}
+
+/* 터치(눌림)했을 때 번지는 블러 그라데이션 — 붉은/하늘색 잉크가 퍼지는 느낌 */
+.banner::after {
+  content: '';
+  position: absolute;
+  inset: -20%; /* 블러가 카드 가장자리에서 잘려 보이지 않도록 실제 박스보다 크게 */
+  z-index: 2;
+  background:
+    radial-gradient(circle at 28% 32%, var(--color-pink) 0%, transparent 55%),
+    radial-gradient(circle at 78% 62%, #ffffff 0%, transparent 45%),
+    radial-gradient(circle at 55% 15%, #bfe3f5 0%, transparent 45%);
+  filter: blur(28px);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none; /* 그라데이션 레이어가 클릭을 가로채지 않도록 */
+}
+
+.banner:active::after {
+  opacity: 0.9;
+}
+
+.banner--hero {
+  min-height: 240px;
+}
+
+/* 메인 배너 가로 스크롤 캐러셀 — 다른 배너/섹션과 동일하게 페이지 여백 안에서 동작 (풀블리드 아님) */
+.banner-carousel {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 16px;
+  scrollbar-width: none; /* Firefox */
+}
+
+.banner-carousel::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.banner-carousel .banner--hero {
+  flex: 0 0 88%;      /* 카드 하나의 폭 — 줄이면 옆 카드가 더 많이 보임(표준적인 수준의 살짝 peek) */
+  scroll-snap-align: center;
+  margin-bottom: 0;
+}
+
+/* 캐러셀 전용 점 인디케이터 — 페이지 섹션 인디케이터와 혼동되지 않게 배너 바로 아래 별도로 배치 */
+.banner-carousel__dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 32px;
+}
+
+.banner-carousel__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-gray-bg);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.banner-carousel__dot.is-active {
+  background: var(--color-pink);
+  transform: scale(1.3);
+}
+
+.banner--sub {
+  min-height: 96px;
+}
+
+.banner__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.banner__placeholder {
+  position: relative;
+  z-index: 1;
+  font-size: 13px;              /* 배너 안내 문구 */
+  line-height: 1.6;
+  padding: 0 24px;
+  color: var(--color-white);
+}
+
+/* 아이디 제출 바로가기 CTA */
+.cta {
+  display: block;
+  text-align: center;
+  padding: 8px 12px 44px;
+  transition: transform 0.15s ease;
+}
+
+.cta:active {
+  transform: scale(0.97); /* 눌렀을 때 살짝 눌리는 촉각 피드백 */
+}
+
+.cta__title {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(24px, 7vw, 28px);   /* (아이디 제출 바로가기) */
+  color: var(--color-pink);
+}
+
+.cta__note {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;                /* 추가 안내사항 문구 */
+  color: var(--color-gray-text);
+}
+
+/* 아이디 달성률 */
+.progress {
+  text-align: center;
+  margin: 8px 0 64px;
+}
+
+.progress__title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(24px, 7vw, 28px);   /* (아이디 달성률) */
+  color: var(--color-pink);
+  margin: 0 0 20px;
+}
+
+.progress__bar {
+  width: 100%;
+  height: 10px;
+  background: var(--color-gray-bg);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress__fill {
+  height: 100%;
+  background: var(--color-pink);
+  border-radius: 999px 0 0 999px;
+  transition: width 0.4s ease;
+}
+
+/* ==============================================
+   텍스트 레이어 블러 — 큰 헤드라인급 텍스트에만 적용
+   (작은 본문/리스트 텍스트는 블러 걸면 렌더링 깨진 것처럼 보여서 제외)
+============================================== */
+.logo__main,
+.logo__sub,
+.nav__item a,
+.section__title,
+.cta__title,
+.progress__title,
+.view__title,
+.hamburger__icon,
+.illust--keys {
+  filter: blur(0.5px);
+}

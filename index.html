@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KEY STREAMING TEAM</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===== HEADER (햄버거만 떠있는 플로팅 레이어, 자연스러운 투명 그라데이션) ===== -->
+  <header class="header" id="header">
+    <button class="hamburger" id="hamburgerBtn" aria-label="메뉴 열기" aria-expanded="false">
+      <span class="hamburger__icon">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    </button>
+  </header>
+
+  <!-- ===== NAV (헤더 아래로 드롭다운, 위쪽에서부터 자연스럽게 등장) ===== -->
+  <nav class="nav" id="nav">
+    <div class="nav__inner">
+      <ul class="nav__list">
+        <li class="nav__item" data-target="main">
+          <a href="#main"><span class="nav__label"><span class="nav__num">(1)</span>MAIN</span></a>
+        </li>
+        <li class="nav__item" data-target="quicklink">
+          <a href="#quicklink"><span class="nav__label"><span class="nav__num">(2)</span>QUICKLINK</span></a>
+        </li>
+        <li class="nav__item" data-target="guide">
+          <a href="#guide"><span class="nav__label"><span class="nav__num">(3)</span>GUIDE</span></a>
+        </li>
+        <li class="nav__item" data-target="oneclick">
+          <a href="#oneclick"><span class="nav__label"><span class="nav__num">(4)</span>ONECLICK</span></a>
+        </li>
+        <li class="nav__item" data-target="timetable">
+          <a href="#timetable"><span class="nav__label"><span class="nav__num">(5)</span>TIMETABLE</span></a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="nav__backdrop" id="navBackdrop"></div>
+
+  <!-- ===== PAGES — 바깥(.pages)은 화면 크기로 자르는 창, 안쪽(.pages__track)이 실제로 미끄러지는 트랙.
+       MAIN/QUICKLINK/GUIDE/ONECLICK/TIMETABLE 5개가 트랙 안에 가로로 나란히 있고,
+       nav에서 항목 클릭하면 트랙 전체를 translateX로 이동시켜서 이전 화면은 옆으로 빠지고
+       다음 화면이 옆에서 들어오는 방식으로 전환됨 (하나가 배경, 나머지가 위에 쌓이는 구조 아님) ===== -->
+  <div class="pages" id="pages">
+  <div class="pages__track" id="pagesTrack">
+
+  <!-- ===== (1) MAIN ===== -->
+  <main>
+
+    <section class="section section--main" id="main">
+
+      <!-- 로고: 헤더에 고정하지 않고 포스터 본문의 일부로 흐름 -->
+      <a href="#main" class="logo">
+        <span class="logo__main">KEY</span>
+        <span class="logo__sub">STREAMING<br>TEAM</span>
+      </a>
+
+      <!-- 우측 상단 프레임 일러스트 -->
+      <div class="illust illust--keys">
+        <img src="assets/Frame 28.png" alt="" class="illust__img" onerror="this.style.display='none'">
+      </div>
+
+      <!-- 메인 배너 (가로 스크롤 캐러셀, 페이지 여백 안에서 양옆 살짝 peek + 무한 루프) — 지금은 임시로 4개만
+           맨 앞/맨 뒤에 있는 "clone" 카드는 루프 착시용 복제본, 실제 카드 아님(스크린리더에서 숨김) -->
+      <div class="banner-carousel" id="bannerCarousel">
+        <a href="#" class="banner banner--hero" data-clone="true" aria-hidden="true" tabindex="-1">
+          <img src="assets/banner-main-4.png" alt="" class="banner__img" onerror="this.style.display='none'">
+          <span class="banner__placeholder">배너 위치 4</span>
+        </a>
+        <a href="https://youtu.be/ktCF5D6ECk0?si=SireTbJ-_aI7QX_W" target="_blank" rel="noopener noreferrer" class="banner banner--hero" data-index="1">
+          <img src="https://img.youtube.com/vi/ktCF5D6ECk0/hqdefault.jpg" alt="" class="banner__img" onerror="this.style.display='none'">
+        </a>
+        <a href="#" class="banner banner--hero" data-index="2">
+          <img src="assets/banner-main-2.png" alt="" class="banner__img" onerror="this.style.display='none'">
+          <span class="banner__placeholder">배너 위치 2</span>
+        </a>
+        <a href="#" class="banner banner--hero" data-index="3">
+          <img src="assets/banner-main-3.png" alt="" class="banner__img" onerror="this.style.display='none'">
+          <span class="banner__placeholder">배너 위치 3</span>
+        </a>
+        <a href="#" class="banner banner--hero" data-index="4">
+          <img src="assets/banner-main-4.png" alt="" class="banner__img" onerror="this.style.display='none'">
+          <span class="banner__placeholder">배너 위치 4</span>
+        </a>
+        <a href="https://youtu.be/ktCF5D6ECk0?si=SireTbJ-_aI7QX_W" target="_blank" rel="noopener noreferrer" class="banner banner--hero" data-clone="true" aria-hidden="true" tabindex="-1">
+          <img src="https://img.youtube.com/vi/ktCF5D6ECk0/hqdefault.jpg" alt="" class="banner__img" onerror="this.style.display='none'">
+        </a>
+      </div>
+
+      <!-- 캐러셀 전용 점 인디케이터 (실제 배너 개수만큼, 위쪽 클론 카드는 제외) -->
+      <div class="banner-carousel__dots" id="bannerDots">
+        <button class="banner-carousel__dot" data-index="1" aria-label="배너 1로 이동"></button>
+        <button class="banner-carousel__dot" data-index="2" aria-label="배너 2로 이동"></button>
+        <button class="banner-carousel__dot" data-index="3" aria-label="배너 3로 이동"></button>
+        <button class="banner-carousel__dot" data-index="4" aria-label="배너 4로 이동"></button>
+      </div>
+
+      <!-- 아이디 제출 바로가기 -->
+      <a href="#" class="cta">
+        <span class="cta__title">(아이디 제출 바로가기)</span>
+        <span class="cta__note">추가 안내사항이 있으면 작성해 주세요</span>
+      </a>
+
+      <!-- 배너 링크 2개 -->
+      <a href="https://keyteam0923-droid.github.io/monthly-Ids/" target="_blank" rel="noopener noreferrer" class="banner banner--sub">
+        <img src="assets/banner-sub-1.png" alt="" class="banner__img" onerror="this.style.display='none'">
+        <span class="banner__placeholder">폼 제출 링크 배너</span>
+      </a>
+
+      <a href="https://script.google.com/macros/s/AKfycbxadqFYjmTD0sso6jUgC_dlSqKhaGTe5gsRj_GqbDd1kXAMnA9lDHlthJlxcebqj_7D/exec" class="banner banner--sub">
+        <img src="assets/banner-sub-2.png" alt="" class="banner__img" onerror="this.style.display='none'">
+        <span class="banner__placeholder">스탬프 모으기 배너</span>
+      </a>
+
+      <!-- 아이디 달성률 -->
+      <div class="progress">
+        <h2 class="progress__title">(아이디 달성률)</h2>
+        <div class="progress__bar">
+          <div class="progress__fill" id="progressFill" data-progress="42" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- 인물 스케치 일러스트 자리 -->
+      <div class="illust illust--face">
+        <img src="assets/illust-face.png" alt="" class="illust__img" onerror="this.style.display='none'">
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ===== (2) QUICKLINK ===== -->
+  <div class="view" id="view-quicklink" data-view="quicklink">
+    <div class="view__inner">
+      <h2 class="view__title"><span class="section__num">(2)</span>QUICKLINK</h2>
+
+      <ul class="linklist">
+        <li><a href="#" class="linklist__item">HUNTER MV (YouTube)</a></li>
+        <li><a href="#" class="linklist__item">HUNTER MV (네이버TV)</a></li>
+        <li><a href="#" class="linklist__item">Official Album Trailer</a></li>
+        <li><a href="#" class="linklist__item">MV Teaser</a></li>
+        <li><a href="#" class="linklist__item">스테이션헤드</a></li>
+        <li><a href="#" class="linklist__item">뮤직웨이브</a></li>
+      </ul>
+
+      <ul class="linklist">
+        <li><a href="#" class="linklist__item">총공팀 네이버 카페</a></li>
+        <li><a href="#" class="linklist__item">총공팀 트위터</a></li>
+        <li><a href="#" class="linklist__item">지니 아이디 제출</a></li>
+        <li><a href="#" class="linklist__item">벅스 아이디 제출</a></li>
+        <li><a href="#" class="linklist__item">총공팀 FAQ</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== (3) GUIDE ===== -->
+  <div class="view" id="view-guide" data-view="guide">
+    <div class="view__inner">
+      <h2 class="view__title"><span class="section__num">(3)</span>GUIDE</h2>
+
+      <section class="linkgroup-section">
+        <h3 class="linkgroup-section__title">음원 스트리밍 가이드</h3>
+        <ul class="linklist">
+          <li><a href="#" class="linklist__item" data-guide-image="assets/melonstrm.png">멜론 스트리밍 가이드</a></li>
+          <li><a href="#" class="linklist__item" data-guide-image="assets/지니스트리밍.png">지니 스트리밍 가이드</a></li>
+          <li><a href="#" class="linklist__item">벅스 스트리밍 가이드</a></li>
+          <li><a href="#" class="linklist__item">바이브 스트리밍 가이드</a></li>
+          <li><a href="#" class="linklist__item" data-guide-image="assets/플로strm.png">플로 스트리밍 가이드</a></li>
+          <li><a href="#" class="linklist__item" data-guide-image="assets/spotifystrm.png">스포티파이 스트리밍 가이드</a></li>
+          <li><a href="#" class="linklist__item" data-guide-image="assets/애플뮤직스트리밍.png">애플뮤직 스트리밍 가이드</a></li>
+          <li><a href="#" class="linklist__item">지니 음악 나누기 가이드</a></li>
+        </ul>
+      </section>
+
+      <section class="linkgroup-section">
+        <h3 class="linkgroup-section__title">다운로드 가이드</h3>
+        <ul class="linklist">
+          <li><a href="#" class="linklist__item">멜론 다운로드 가이드</a></li>
+          <li><a href="#" class="linklist__item">지니 다운로드 가이드</a></li>
+          <li><a href="#" class="linklist__item">벅스 다운로드 가이드</a></li>
+          <li><a href="#" class="linklist__item">바이브 다운로드 가이드</a></li>
+          <li><a href="#" class="linklist__item">V컬러링 다운로드 가이드</a></li>
+          <li><a href="#" class="linklist__item">카카오뮤직 다운로드 가이드</a></li>
+        </ul>
+      </section>
+
+      <section class="linkgroup-section">
+        <h3 class="linkgroup-section__title">MV 스트리밍 가이드</h3>
+        <ul class="linklist">
+          <li><a href="#" class="linklist__item">유튜브 스트리밍 가이드</a></li>
+          <li><a href="#" class="linklist__item">네이버TV 스트리밍 가이드</a></li>
+        </ul>
+      </section>
+
+      <section class="linkgroup-section">
+        <h3 class="linkgroup-section__title">음악방송 투표 가이드</h3>
+        <ul class="linklist">
+          <li><a href="#" class="linklist__item">엠카 엠넷플러스 투표 가이드</a></li>
+          <li><a href="#" class="linklist__item">뮤직뱅크 올차트 투표 가이드</a></li>
+          <li><a href="#" class="linklist__item">올차트 퀴즈 정답 모음 (08.22. 수정)</a></li>
+          <li><a href="#" class="linklist__item">음중 뮤빗 투표 가이드</a></li>
+          <li><a href="#" class="linklist__item">인가 링크 투표 가이드</a></li>
+          <li><a href="#" class="linklist__item">인가 하이어 투표 가이드</a></li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <!-- ===== (4) ONECLICK ===== -->
+  <div class="view" id="view-oneclick" data-view="oneclick">
+    <div class="view__inner">
+      <h2 class="view__title"><span class="section__num">(4)</span>ONECLICK</h2>
+
+      <section class="linkgroup-section">
+        <h3 class="linkgroup-section__title">원클릭 라디오 문자보내기</h3>
+        <ul class="linklist">
+          <li><a href="#" class="linklist__item">라디오 문자 원클릭 링크 모음</a></li>
+        </ul>
+      </section>
+
+      <section class="linkgroup-section">
+        <h3 class="linkgroup-section__title">원클릭 스밍리스트</h3>
+        <ul class="linklist">
+          <li><a href="#" class="linklist__item">공통 권장 스밍리스트</a></li>
+          <li><a href="#" class="linklist__item">멜론 원클릭 스밍리스트</a></li>
+          <li><a href="#" class="linklist__item">지니 원클릭 스밍리스트</a></li>
+          <li><a href="#" class="linklist__item">벅스 원클릭 스밍리스트</a></li>
+          <li><a href="#" class="linklist__item">바이브 원클릭 스밍리스트</a></li>
+          <li><a href="#" class="linklist__item">삼성뮤직 플레이리스트</a></li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <!-- ===== (5) TIMETABLE — 콘텐츠 미정, 자리만 (내용 정해지면 QUICKLINK/GUIDE처럼 .linklist 등으로 채우면 됨) ===== -->
+  <div class="view" id="view-timetable" data-view="timetable">
+    <div class="view__inner">
+      <h2 class="view__title"><span class="section__num">(5)</span>TIMETABLE</h2>
+    </div>
+  </div>
+
+  </div><!-- /.pages__track -->
+  </div><!-- /.pages -->
+
+  <!-- ===== 이미지 가이드 뷰어 — 링크에 data-guide-image="경로"만 붙이면 이 뷰어로 그 이미지가 뜸.
+       가이드 링크가 늘어나도 페이지를 계속 새로 안 만들고 이거 하나 재사용하면 됨 ===== -->
+  <div class="image-viewer" id="imageViewer">
+    <div class="image-viewer__inner">
+      <button class="image-viewer__close" id="imageViewerClose" aria-label="닫고 이전 화면으로">×</button>
+      <img class="image-viewer__img" id="imageViewerImg" src="" alt="">
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

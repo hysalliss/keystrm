@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "key-streaming-team",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8108"],
+      "port": 8108
+    }
+  ]
+}
